@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<String> lista =
                     data.getStringArrayListExtra("ejercicios");
 
-            layoutEjercicios.removeAllViews();
 
             for(String ejercicio : lista){
 
@@ -70,8 +69,14 @@ public class MainActivity extends AppCompatActivity {
                 TextView txtDetalle =
                         view.findViewById(R.id.txtDetalle);
 
+                Button btnEliminar = view.findViewById(R.id.btnEliminar);
+
                 txtEjercicio.setText(ejercicio);
                 txtDetalle.setText("3 series x 15 repeticiones");
+
+                btnEliminar.setOnClickListener(v -> {
+                    layoutEjercicios.removeView(view);
+                });
 
                 layoutEjercicios.addView(view);
             }
