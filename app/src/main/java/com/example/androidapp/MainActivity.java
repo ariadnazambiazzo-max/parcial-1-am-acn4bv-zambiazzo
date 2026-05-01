@@ -14,10 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnAgregar;
+    Button btnAgregarEjercicio;
     LinearLayout layoutEjercicios;
 
     @Override
@@ -30,6 +33,49 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        btnAgregarEjercicio = findViewById(R.id.btnAgregarEjercicio);
+        layoutEjercicios = findViewById(R.id.layoutEjercicios);
+
+        btnAgregarEjercicio.setOnClickListener(v -> {
+
+            Intent intent = new Intent(MainActivity.this,
+                    SeleccionEjerciciosActivity.class);
+
+            startActivityForResult(intent, 1);
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode,
+                                    int resultCode,
+                                    @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1 && resultCode == RESULT_OK){
+
+            ArrayList<String> lista =
+                    data.getStringArrayListExtra("ejercicios");
+
+            layoutEjercicios.removeAllViews();
+
+            for(String ejercicio : lista){
+
+                View view = LayoutInflater.from(this)
+                        .inflate(R.layout.item_ejercicio, null);
+
+                TextView txtEjercicio =
+                        view.findViewById(R.id.txtEjercicio);
+
+                TextView txtDetalle =
+                        view.findViewById(R.id.txtDetalle);
+
+                txtEjercicio.setText(ejercicio);
+                txtDetalle.setText("3 series x 15 repeticiones");
+
+                layoutEjercicios.addView(view);
+            }
+        }
     }
 
 
