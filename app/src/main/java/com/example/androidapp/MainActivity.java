@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     Button btnAgregarEjercicio;
+    Button btnComenzar;
     LinearLayout layoutEjercicios;
     ArrayList<Ejercicio> rutinaActual = new ArrayList<>();
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnAgregarEjercicio = findViewById(R.id.btnAgregarEjercicio);
+        btnComenzar = findViewById(R.id.btnComenzar);
         layoutEjercicios = findViewById(R.id.layoutEjercicios);
 
         launcher = registerForActivityResult(
@@ -48,9 +51,13 @@ public class MainActivity extends AppCompatActivity {
 
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
 
-                        rutinaActual =
+                        ArrayList<Ejercicio> data =
                                 (ArrayList<Ejercicio>) result.getData()
                                         .getSerializableExtra("rutina");
+
+                        if (data != null) {
+                            rutinaActual = data;
+                        }
 
                         layoutEjercicios.removeAllViews();
 
@@ -68,6 +75,20 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("rutina", rutinaActual);
 
             launcher.launch(intent);
+        });
+
+        btnComenzar.setOnClickListener(v -> {
+
+            if (rutinaActual.isEmpty()) {
+                Toast.makeText(this,
+                        "No hay ejercicios en la rutina",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Intent intent = new Intent(this, EntrenamientoActivity.class);
+            intent.putExtra("rutina", rutinaActual);
+            startActivity(intent);
         });
     }
 
