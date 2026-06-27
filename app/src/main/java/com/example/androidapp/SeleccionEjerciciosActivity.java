@@ -2,8 +2,12 @@ package com.example.androidapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,43 +15,132 @@ import java.util.ArrayList;
 
 public class SeleccionEjerciciosActivity extends AppCompatActivity {
 
+    Spinner spEjercicios;
+    EditText txtSeries, txtRepeticiones;
+    Button btnAgregar, btnGuardarRutina, btnCancelar;
 
-    Button btnAgregar, btnCancelar;
+    ListView listaRutina;
 
-    CheckBox chk1, chk2, chk3, chk4, chk5;
+
+    ArrayList<Ejercicio> rutina = new ArrayList<>();
+
+    ArrayAdapter<String> adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seleccion_ejercicios);
 
-        chk1 = findViewById(R.id.chk1);
-        chk2 = findViewById(R.id.chk2);
-        chk3 = findViewById(R.id.chk3);
-        chk4 = findViewById(R.id.chk4);
-        chk5 = findViewById(R.id.chk5);
+        rutina = (ArrayList<Ejercicio>) getIntent()
+                .getSerializableExtra("rutina");
+
+        if (rutina == null) {
+            rutina = new ArrayList<>();
+        }
+
+        spEjercicios = findViewById(R.id.spEjercicios);
+        txtSeries = findViewById(R.id.txtSeries);
+        txtRepeticiones = findViewById(R.id.txtRepeticiones);
 
         btnAgregar = findViewById(R.id.btnAgregar);
+        btnGuardarRutina = findViewById(R.id.btnGuardarRutina);
         btnCancelar = findViewById(R.id.btnCancelar);
 
-        btnAgregar.setOnClickListener(v -> {
-            ArrayList<String> lista = new ArrayList<>();
+        listaRutina = findViewById(R.id.listaRutina);
 
-            if(chk1.isChecked()) lista.add("Sentadillas");
-            if(chk2.isChecked()) lista.add("Plancha");
-            if(chk3.isChecked()) lista.add("Zancadas");
-            if(chk4.isChecked()) lista.add("Flexiones");
-            if(chk5.isChecked()) lista.add("Abdominales");
+        String[] ejercicios = {
+                "Sentadillas",
+                "Plancha",
+                "Flexiones",
+                "Zancadas",
+                "Abdominales"
+        };
 
-            Intent intent = new Intent();
-            intent.putStringArrayListExtra("ejercicios", lista);
+        ArrayAdapter<String> spinnerAdapter =
+                new ArrayAdapter<>(this,
+                        android.R.layout.simple_spinner_item,
+                        ejercicios);
 
-            setResult(RESULT_OK, intent);
-            finish();
-        });
+        spinnerAdapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
 
-        btnCancelar.setOnClickListener(v -> {
-            finish();
-        });
+        adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_list_item_1,
+                new ArrayList<>()
+        );
+
+        listaRutina.setAdapter(adapter);
+
+        spEjercicios.setAdapter(spinnerAdapter);
+
+        actualizarLista();
+
+        btnAgregar.setOnClickListener(v -> agregarEjercicio());
+
+        btnGuardarRutina.setOnClickListener(v -> guardarRutina());
+
+        btnCancelar.setOnClickListener(v -> finish());
+
+    }
+
+
+    private void agregarEjercicio(){
+
+        String nombre = spEjercicios.getSelectedItem().toString();
+
+        if(txtSeries.getText().toString().isEmpty()
+                || txtRepeticiones.getText().toString().isEmpty()){
+
+            Toast.makeText(this,
+                    "Complete todos los campos",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int series = Integer.parseInt(txtSeries.getText().toString());
+        int repeticiones = Integer.parseInt(txtRepeticiones.getText().toString());
+
+        Ejercicio ejercicio =
+                new Ejercicio(nombre, series, repeticiones);
+
+        rutina.add(ejercicio);
+
+        actualizarLista();
+
+        txtSeries.setText("");
+        txtRepeticiones.setText("");
+
+    }
+
+    private void guardarRutina() {
+
+        Intent intent = new Intent();
+        intent.putExtra("rutina", rutina);
+
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    private void actualizarLista() {
+
+        if (adapter == null || rutina == null) return;
+
+        ArrayList<String> textos = new ArrayList<>();
+
+        for (Ejercicio e : rutina) {
+            textos.add(
+                    e.getNombre() + " - " +
+                            e.getSeries() + " x " +
+                            e.getRepeticiones()
+            );
+        }
+
+        adapter.clear();
+        adapter.addAll(textos);
+        adapter.notifyDataSetChanged();
     }
 }
+
+

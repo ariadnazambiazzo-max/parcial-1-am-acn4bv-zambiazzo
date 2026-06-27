@@ -1,60 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp">
-
-    <CheckBox
-        android:id="@+id/chk1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sentadillas" />
-
-    <CheckBox
-        android:id="@+id/chk2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Plancha" />
-
-    <CheckBox
-        android:id="@+id/chk3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Zancadas" />
-
-    <CheckBox
-        android:id="@+id/chk4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Flexiones" />
-
-    <CheckBox
-        android:id="@+id/chk5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Abdominales" />
+    android:background="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center">
+        android:orientation="vertical"
+        android:padding="20dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nueva Rutina"
+            android:textStyle="bold"
+            android:textSize="28sp"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seleccioná los ejercicios que querés agregar"
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Ejercicio -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ejercicio"
+            android:textStyle="bold"/>
+
+        <Spinner
+            android:id="@+id/spEjercicios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Series -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Series"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/txtSeries"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ej: 3"
+            android:inputType="number"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"/>
+
+        <!-- Repeticiones -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Repeticiones"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/txtRepeticiones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ej: 15"
+            android:inputType="number"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Botón agregar ejercicio -->
         <Button
             android:id="@+id/btnAgregar"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#954dcd"
-            android:text="Agregar" />
+            android:text="Agregar ejercicio"
+            android:backgroundTint="#954DCD"
+            android:textColor="#FFFFFF"/>
 
-        <Button
-            android:id="@+id/btnCancelar"
+        <!-- Lista de ejercicios agregados -->
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:backgroundTint="#D4000E"
-            android:text="Cancelar" />
+            android:text="Ejercicios agregados"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="10dp"/>
+
+        <ListView
+            android:id="@+id/listaRutina"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:divider="#DDDDDD"
+            android:dividerHeight="1dp"/>
+
+        <!-- Botones finales -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/btnGuardarRutina"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Guardar Rutina"
+                android:backgroundTint="#28A745"
+                android:textColor="#FFFFFF"/>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnCancelar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancelar"
+                android:backgroundTint="#D4000E"
+                android:textColor="#FFFFFF"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

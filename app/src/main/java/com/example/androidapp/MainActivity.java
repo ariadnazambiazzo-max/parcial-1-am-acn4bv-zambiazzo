@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -22,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnAgregarEjercicio;
     LinearLayout layoutEjercicios;
+    ArrayList<Ejercicio> rutinaActual = new ArrayList<>();
+
+    ActivityResultLauncher<Intent> launcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,51 +42,59 @@ public class MainActivity extends AppCompatActivity {
         btnAgregarEjercicio = findViewById(R.id.btnAgregarEjercicio);
         layoutEjercicios = findViewById(R.id.layoutEjercicios);
 
+        launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+
+                        rutinaActual =
+                                (ArrayList<Ejercicio>) result.getData()
+                                        .getSerializableExtra("rutina");
+
+                        layoutEjercicios.removeAllViews();
+
+                        for (Ejercicio e : rutinaActual) {
+                            agregarVista(e);
+                        }
+                    }
+                });
+
         btnAgregarEjercicio.setOnClickListener(v -> {
 
             Intent intent = new Intent(MainActivity.this,
                     SeleccionEjerciciosActivity.class);
 
-            startActivityForResult(intent, 1);
+            intent.putExtra("rutina", rutinaActual);
+
+            launcher.launch(intent);
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode,
-                                    int resultCode,
-                                    @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void agregarVista(Ejercicio ejercicio){
 
-        if(requestCode == 1 && resultCode == RESULT_OK){
+        View view = LayoutInflater.from(this)
+                .inflate(R.layout.item_ejercicio, layoutEjercicios, false);
 
-            ArrayList<String> lista =
-                    data.getStringArrayListExtra("ejercicios");
+        TextView txtEjercicio = view.findViewById(R.id.txtEjercicio);
+        TextView txtDetalle = view.findViewById(R.id.txtDetalle);
+        Button btnEliminar = view.findViewById(R.id.btnEliminar);
 
+        txtEjercicio.setText(ejercicio.getNombre());
 
-            for(String ejercicio : lista){
+        txtDetalle.setText(
+                ejercicio.getSeries() +
+                        " series x " +
+                        ejercicio.getRepeticiones() +
+                        " repeticiones"
+        );
 
-                View view = LayoutInflater.from(this)
-                        .inflate(R.layout.item_ejercicio, null);
+        btnEliminar.setOnClickListener(v -> {
+            layoutEjercicios.removeView(view);
+            rutinaActual.remove(ejercicio);
+        });
 
-                TextView txtEjercicio =
-                        view.findViewById(R.id.txtEjercicio);
-
-                TextView txtDetalle =
-                        view.findViewById(R.id.txtDetalle);
-
-                Button btnEliminar = view.findViewById(R.id.btnEliminar);
-
-                txtEjercicio.setText(ejercicio);
-                txtDetalle.setText("3 series x 15 repeticiones");
-
-                btnEliminar.setOnClickListener(v -> {
-                    layoutEjercicios.removeView(view);
-                });
-
-                layoutEjercicios.addView(view);
-            }
-        }
+        layoutEjercicios.addView(view);
     }
-
 
 }
