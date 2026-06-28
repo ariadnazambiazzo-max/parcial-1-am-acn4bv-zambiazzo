@@ -17,6 +17,8 @@ public class EntrenamientoActivity extends AppCompatActivity {
 
     ArrayList<Ejercicio> rutina;
     int indiceActual = 0;
+    int serieActual = 1;
+    int segundosPorSerie = 30;
     TextView txtNombreEjercicio;
     TextView txtSerie;
     TextView txtTiempo;
@@ -24,24 +26,23 @@ public class EntrenamientoActivity extends AppCompatActivity {
     ImageView imgEjercicio;
     ImageButton btnSiguiente;
     ImageButton btnPausa;
+    ImageButton btnAnterior;
     CountDownTimer timer;
     boolean pausado = false;
     long tiempoRestante;
 
-    int serieActual = 1;
-    int segundosPorSerie = 30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrenamiento);
 
-        rutina = (ArrayList<Ejercicio>) getIntent()
-                .getSerializableExtra("rutina");
+        rutina = (ArrayList<Ejercicio>) getIntent().getSerializableExtra("rutina");
 
         if (rutina == null) {
             rutina = new ArrayList<>();
         }
+
 
         imgEjercicio = findViewById(R.id.imgEjercicio);
 
@@ -52,10 +53,12 @@ public class EntrenamientoActivity extends AppCompatActivity {
 
         btnSiguiente = findViewById(R.id.btnSiguiente);
         btnPausa = findViewById(R.id.btnPausa);
+        btnAnterior = findViewById(R.id.btnAnterior);
 
-        mostrarEjercicio();
 
-        btnSiguiente.setOnClickListener(v -> siguienteEjercicio());
+        btnSiguiente.setOnClickListener(v -> siguiente());
+
+        btnAnterior.setOnClickListener(v -> anterior());
 
         btnPausa.setOnClickListener(v -> {
 
@@ -75,6 +78,16 @@ public class EntrenamientoActivity extends AppCompatActivity {
             }
 
         });
+        mostrarEjercicio();
+    }
+
+    private void actualizarSerieUI(Ejercicio actual) {
+
+        txtSerie.setText(
+                "Serie " + serieActual +
+                        " de " + actual.getSeries() +
+                        " • " + actual.getRepeticiones() + " repeticiones"
+        );
     }
 
     private void mostrarEjercicio() {
@@ -105,18 +118,9 @@ public class EntrenamientoActivity extends AppCompatActivity {
         btnPausa.setImageResource(android.R.drawable.ic_media_pause);
 
         txtNombreEjercicio.setText(actual.getNombre());
-
-        txtSerie.setText(
-                "Serie " +
-                        serieActual +
-                        " de " +
-                        actual.getSeries() +
-                        " • " + actual.getRepeticiones() + " repeticiones");
-
+        actualizarSerieUI(actual);
         actualizarImagen(actual.getNombre());
-
         actualizarSiguiente();
-
         iniciarTimer(segundosPorSerie * 1000);
     }
 
@@ -158,7 +162,6 @@ public class EntrenamientoActivity extends AppCompatActivity {
 
             @Override
             public void onFinish(){
-
                 avanzarSerie();
             }
 
@@ -171,35 +174,50 @@ public class EntrenamientoActivity extends AppCompatActivity {
         Ejercicio actual = rutina.get(indiceActual);
 
         if(serieActual < actual.getSeries()){
-
             serieActual++;
-
-            txtSerie.setText(
-                    "Serie " +
-                            serieActual +
-                            " de " +
-                            actual.getSeries() +
-                            " • " + actual.getRepeticiones() + " repeticiones");
-
+            actualizarSerieUI(actual);
             iniciarTimer(segundosPorSerie * 1000);
-
         }else{
-
             indiceActual++;
-
             mostrarEjercicio();
         }
-
     }
 
-    private void siguienteEjercicio() {
+    private void siguiente() {
+        if (timer != null) timer.cancel();
 
-        if (timer != null) {
-            timer.cancel();
+        Ejercicio actual = rutina.get(indiceActual);
+
+        if (serieActual < actual.getSeries()) {
+            serieActual++;
+            actualizarSerieUI(actual);
+            iniciarTimer(segundosPorSerie * 1000);
+
+        } else {
+            // pasar al siguiente ejercicio
+            if (indiceActual < rutina.size() - 1) {
+                indiceActual++;
+                mostrarEjercicio();
+            }
         }
+    }
+    private void anterior() {
 
-        indiceActual++;
-        mostrarEjercicio();
+        if (timer != null) timer.cancel();
+
+        if (serieActual > 1) {
+            serieActual--;
+            Ejercicio actual = rutina.get(indiceActual);
+            actualizarSerieUI(actual);
+            iniciarTimer(segundosPorSerie * 1000);
+
+        } else {
+            // volver al ejercicio anterior
+            if (indiceActual > 0) {
+                indiceActual--;
+                mostrarEjercicio();
+            }
+        }
     }
 
     private void actualizarImagen(String nombre){
