@@ -55,37 +55,39 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/txtTiempo"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="30dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtTiempo">
 
         <ImageButton
             android:id="@+id/btnAnterior"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_media_previous"
-            android:contentDescription="anterior" />
+            android:contentDescription="anterior"
+            android:src="@android:drawable/ic_media_previous" />
 
         <ImageButton
             android:id="@+id/btnPausa"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:backgroundTint="#954dcd"
-            android:src="@android:drawable/ic_media_pause"
-            android:contentDescription="pausa" />
+            android:background="@drawable/btn_circle"
+            android:contentDescription="pausa"
+            android:padding="20dp"
+            android:scaleType="centerInside"
+            android:src="@android:drawable/ic_media_pause" />
 
         <ImageButton
             android:id="@+id/btnSiguiente"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_media_next"
-            android:contentDescription="siguiente" />
+            android:contentDescription="siguiente"
+            android:src="@android:drawable/ic_media_next" />
 
     </LinearLayout>
 
