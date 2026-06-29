@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1660529194",
+    "project_id": "fithome-8273c",
+    "storage_bucket": "fithome-8273c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1660529194:android:3209993e34fa625591b153",
+        "android_client_info": {
+          "package_name": "com.example.androidapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxP9Z-W2-hGJ-cXtBA6XTaXQobOACU2UA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
